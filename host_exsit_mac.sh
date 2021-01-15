@@ -11,7 +11,7 @@ ip_all=${num1}.${num2}.${num3}
 
 declare -a num
 a=0
-for i in $(seq 254);
+for i in $(seq 83);
 do
     ping ${ip_all}.$i -c 1 -w 1 &> /dev/null
     if [ $? == 0 ];
@@ -22,6 +22,8 @@ do
     fi
 done
 echo "一共在线主机$a台"
+
+getMac(){
 
 while true;
 do
@@ -48,10 +50,53 @@ do
 		;;
 	esac
 done
-		
+}
+
+link(){
+	 read -p "连接主机的ip：" ip
+     read -p "输入用户名：" user
+	 while true;
+	 do
+	 	stty -echo
+	 	read -p "输入密码：" pass1
+	 	read -p "再次输入密码：" pass2
+		stty echo
+		if [ $pass1 == $pass2 ];
+		then
+	 		sshpass  -p $pass1 ssh  ${user}@${ip}
+			break
+		else
+			continue
+		fi
+	 done
+
+}
+
+cat << eof
+
+------主机操作-----
+1.获取Mac地址
+2.连接主机
+
+eof
+
+
+read -p "请选择：" num
+
+case $num in
+	1)
+		getMac
+
+	;;
+	2)
+		link
+		exit 100
 	
+	;;
+	*)
+		echo "选择错误！！！"
+		exit 100
+	;;
 
-
-
-
+esac
 
